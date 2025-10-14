@@ -5,22 +5,24 @@ import Box from '@mui/material/Box';
 import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import {users} from '../users'
 
-export default function PositionedPopper({openSide, anchorEl, placement, handleClick}) {
-//   const [anchorEl, setAnchorEl] = React.useState(null);
-//   const [open, setOpen] = React.useState(false);
-//   const [placement, setPlacement] = React.useState();
-
-//   const handleClick = (newPlacement) => (event) => {
-//     setAnchorEl(event.currentTarget);
-//     setOpenSide((prev) => placement !== newPlacement || !prev);
-//     setPlacement(newPlacement);
-//   };
-
+export default function SideList() {
+    // const [ open, setOpen ] = React.useState(false);    
+    const [openSide, setOpenSide] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [placement, setPlacement] = React.useState();
+  
+  const handleClick = (newPlacement) => (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpenSide((prev) => placement !== newPlacement || !prev);
+    setPlacement(newPlacement);
+  };
   return (
     <Box sx={{ width: 500 }}>
       <Popper
@@ -30,49 +32,53 @@ export default function PositionedPopper({openSide, anchorEl, placement, handleC
         anchorEl={anchorEl}
         placement={placement}
         transition
+        
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
             <Paper>
-              <Typography sx={{ p: 2 }}>{users[1].name}</Typography>
+                <Typography color='secondary' component='h2' sx={{ p: 4 }}>Chats</Typography>
+                <Typography sx={{ p: 2 }}>{users[0].name}</Typography>
+                <Typography sx={{ p: 2 }}>{users[1].name}</Typography>
+                <Typography sx={{ p: 2 }}>{users[0].name}</Typography>
+                <Typography sx={{ p: 2 }}>{users[2].name}</Typography>
             </Paper>
           </Fade>
         )}
       </Popper>
-      {/* <Grid container sx={{ justifyContent: 'center' }}>
-        <Grid>
-          <Button onClick={handleClick('top-start')}>top-start</Button>
-          <Button onClick={handleClick('top')}>top</Button>
-          <Button onClick={handleClick('top-end')}>top-end</Button>
-        </Grid>
-      </Grid> */}
       <Grid container sx={{ justifyContent: 'center' }}>
-        {/* <Grid size={6}>
-          <Button onClick={handleClick('left-start')}>left-start</Button>
-          <br />
-          <Button onClick={handleClick('left')}>left</Button>
-          <br />
-          <Button onClick={handleClick('left-end')}>left-end</Button>
-        </Grid> */}
-        {/* <Grid container direction="column" sx={{ alignItems: 'flex-end' }} size={6}> */}
-          {/* <Grid>
-            <Button onClick={handleClick('right-start')}>right-start</Button>
-          </Grid> */}
-          <Grid>
-            <Button onClick={handleClick('right')}>{users[0].name}<br/>{users[1].name}<br/>{users[2].name}</Button>
-          </Grid>
-          {/* <Grid>
-            <Button onClick={handleClick('right-end')}>right-end</Button>
-          </Grid> */}
-        {/* </Grid> */}
-      </Grid>
-      {/* <Grid container sx={{ justifyContent: 'center' }}>
         <Grid>
-          <Button onClick={handleClick('bottom-start')}>bottom-start</Button>
-          <Button onClick={handleClick('bottom')}>bottom</Button>
-          <Button onClick={handleClick('bottom-end')}>bottom-end</Button>
+            {/* <Button onClick={handleClick('right')}>{users[0].name}<br/>{users[1].name}<br/>{users[2].name}</Button> */}
+            <IconButton onClick={handleClick('right')} sx={
+            {
+                display: 'flex',
+                width: 70,
+                height: 70,
+                outline: 'none',
+                position: 'absolute',
+                top: '50%',
+                left: -30,
+                borderRadius: '50%',
+                bgcolor: 'primary.light',
+                opacity: 0.5,
+                '&:hover': {
+                    bgcolor: 'primary.dark',
+                    left: 0,
+                },
+                '&:active': {
+                    left: 0,
+                    opacity: 1,
+                }
+          }
+          }
+        >
+            {openSide ? <KeyboardDoubleArrowLeftIcon color="primary.dark" fontSize="large" />
+            :
+            <KeyboardDoubleArrowRightIcon color="primary.dark" fontSize="large" />}
+            
+        </IconButton>
         </Grid>
-      </Grid> */}
+      </Grid>
     </Box>
   );
 }
