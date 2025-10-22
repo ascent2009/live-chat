@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from "react-router";
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,8 +15,8 @@ export default function SignMenu() {
             <PermIdentityIcon color="primary" fontSize="large"/>
           </IconButton>
           <Menu {...bindMenu(popupState)}>
-            <MenuItem onClick={popupState.close}>Sign-in</MenuItem>
-            <MenuItem onClick={popupState.close}>Sign-up</MenuItem>
+            <MenuItem onClick={popupState.close}><Link to='/login'>Sign-in</Link></MenuItem>
+            <MenuItem onClick={popupState.close}><Link to='/welcome'>Sign-out</Link></MenuItem>
             {/* <MenuItem onClick={popupState.close}>Logout</MenuItem> */}
           </Menu>
         </React.Fragment>

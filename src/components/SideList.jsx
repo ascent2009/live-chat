@@ -8,6 +8,7 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper';
+import Tooltip from '@mui/material/Tooltip';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import {users} from '../users'
@@ -49,6 +50,7 @@ export default function SideList() {
       <Grid container sx={{ justifyContent: 'center' }}>
         <Grid>
             {/* <Button onClick={handleClick('right')}>{users[0].name}<br/>{users[1].name}<br/>{users[2].name}</Button> */}
+            <Tooltip title="Show all chats">
             <IconButton onClick={handleClick('right')} sx={
             {
                 display: 'flex',
@@ -77,6 +79,7 @@ export default function SideList() {
             <KeyboardDoubleArrowRightIcon color="primary.dark" fontSize="large" />}
             
         </IconButton>
+        </Tooltip>
         </Grid>
       </Grid>
     </Box>

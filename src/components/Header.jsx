@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -7,7 +6,7 @@ import { useColorScheme } from '@mui/material/styles';
 // import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 // import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import SignMenu from './SignMenu';
-import SideList from './SideList';
+// import SideList from './SideList';
 
 export default function Header() {
   const { mode, setMode } = useColorScheme();
@@ -18,6 +17,7 @@ export default function Header() {
     if(mode === 'light') setMode("dark")
       else setMode("light")
   }
+  
   return (
     <Box component="header" pt={2} sx={{
       display: 'flex',
@@ -27,7 +27,7 @@ export default function Header() {
       
     }}>
         
-        <SideList />
+        {/* <SideList /> */}
         <SignMenu />
         <IconButton 
             aria-label="color mode"
