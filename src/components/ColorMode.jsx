@@ -14,7 +14,7 @@ export default function App() {
       else setMode("light")
   }
   return (
-    <Box position="absolute">
+    <Box position="absolute" top={25} left={20}>
         <IconButton 
                 aria-label="color mode"
                 color="primary"

@@ -1,5 +1,5 @@
-import {Container, Box, Typography} from '@mui/material';
-import {Link} from "react-router";
+import { Container, Box, Typography } from '@mui/material';
+import { Link } from "react-router";
 import WelcomePng from "../assets/welcome.png";
 
 export default function WelcomePage () {
@@ -19,8 +19,8 @@ export default function WelcomePage () {
                 <Typography variant="h4" color="secondary" align='center' fontWeight={600}>Welcome to<br/> The Live-Chat</Typography>
             </Box>
             <Box >
-            <img width="100%" src={WelcomePng} alt="welcome"/>
-        </Box>
+                <img width="100%" src={WelcomePng} alt="welcome"/>
+             </Box>
             <Box>
                 <Link to="/login" style={{fontSize: 28}}>Log in to start chatting </Link>
             </Box>
