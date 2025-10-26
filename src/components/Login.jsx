@@ -20,7 +20,9 @@ export default function Login () {
     const navigate = useNavigate();
 
     const setUpRecaptha = (phoneNumber) => {
-        const recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {});
+        const recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
+            'size': 'normal',
+        });
         recaptchaVerifier.render();
         return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
     }
@@ -55,11 +57,14 @@ export default function Login () {
 
     useEffect(() => {
         const phoneInputCSS = document.querySelector(".PhoneInputInput");
-        phoneInputCSS.style.borderRadius = "20px";
-        phoneInputCSS.style.padding = "10px";
-        phoneInputCSS.style.fontSize = "1rem";
-        phoneInputCSS.style.border = "none";
-        phoneInputCSS.style.outline = "none";
+        if (phoneInputCSS) {
+            phoneInputCSS.style.borderRadius = "20px";
+            phoneInputCSS.style.padding = "10px";
+            phoneInputCSS.style.fontSize = "1rem";
+            phoneInputCSS.style.border = "none";
+            phoneInputCSS.style.outline = "none";
+        }
+        
     })
 
     return (
@@ -74,16 +79,19 @@ export default function Login () {
             background: "pink",
             gap: 5
         }}>
-        {!show ? <FormGroup as="form" sx={{
-            display: "flex",
-            flexDirection: "column",
-            // margin: "auto",
-            width: '60vw',
-            height: '30vh',
-            gap: 5,
-            // justifyContent: "space-around",
-            background: "transparent",
-        }}>
+        {!show ? <FormGroup as="form"
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                // margin: "auto",
+                width: '60vw',
+                height: '30vh',
+                gap: 5,
+                // justifyContent: "space-around",
+                background: "transparent",
+            }}
+            onSubmit={getOTP}
+        >
                     <PhoneInput
                         defaultCountry="RU"
                         value={phone}
@@ -100,7 +108,7 @@ export default function Login () {
                             color: "red"
                         }}>{error}</FormHelperText>}
                     </Box>
-                    <Button variant="contained" color="secondary" onClick={getOTP} >
+                    <Button variant="contained" color="secondary" type="submit">
                         Send OTP
                     </Button>
                         <Box  sx={{
@@ -108,13 +116,13 @@ export default function Login () {
                             width: 'inherit',
                             justifyContent: 'center'
                         }}>
-                    <Box id="recaptcha-container"></Box>
+                    <Box id="sign-in-button"></Box>
                     </Box>
                   
                         
                   
                 </FormGroup> : null}
-        {show ? <FormGroup>
+        {show ? <FormGroup as="form" onSubmit={verifyOTP}>
             <FormControl>
                 
                     <Input
@@ -124,7 +132,7 @@ export default function Login () {
                     />
                     <br />
                     <br />
-                    <Button variant="contained" color="secondary" onClick={verifyOTP}>
+                    <Button variant="contained" color="secondary" type="submit">
                         Verify OTP
                     </Button>
                     
