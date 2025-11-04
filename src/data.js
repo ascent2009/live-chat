@@ -8,4 +8,6 @@ export const users = [
     {
         name: 'Dmitry'
     },
-]
+];
+
+

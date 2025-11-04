@@ -1,10 +1,21 @@
+import { observer, useLocalObservable } from "mobx-react-lite";
+import { myUser } from '../mobx'
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Header from './Header';
 import SideList from './SideList';
+import { useNavigate, redirect } from 'react-router';
 
-export default function HomePage() {
-    
+
+const HomePage = observer(() => {
+  const navigate = useNavigate();
+  const isAuthenticated = useLocalObservable(() => myUser)
+  const user = useLocalObservable(() => myUser);
+  
+  if (!isAuthenticated.isAuthenticated) {
+    // navigate('/')
+    throw redirect("/");
+  }
   return (
     <Container maxWidth="sm" sx={{
       display: 'flex',
@@ -25,14 +36,17 @@ export default function HomePage() {
         color: 'text.primary',
         borderRadius: 1,
         p: 3,
-        // minHeight: '56px',
         flexDirection: "column"
       }}
     >
-      nNNNNN
+      {user.getUserName()}
       
     </Box>
     </Container>
   );
-}
+});
+
+export default HomePage;
+
+
 

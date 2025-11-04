@@ -11,19 +11,23 @@ import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
-import {users} from '../users'
+import {users} from '../data'
+import { observer, useLocalObservable  } from "mobx-react-lite";
 
-export default function SideList() {
+
+const SideList = observer(() => {
     // const [ open, setOpen ] = React.useState(false);    
     const [openSide, setOpenSide] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [placement, setPlacement] = React.useState();
+
+    const chats = useLocalObservable(() => users)
   
-  const handleClick = (newPlacement) => (event) => {
-    setAnchorEl(event.currentTarget);
-    setOpenSide((prev) => placement !== newPlacement || !prev);
-    setPlacement(newPlacement);
-  };
+    const handleClick = (newPlacement) => (event) => {
+      setAnchorEl(event.currentTarget);
+      setOpenSide((prev) => placement !== newPlacement || !prev);
+      setPlacement(newPlacement);
+    };
   return (
     <Box sx={{ width: 500 }}>
       <Popper
@@ -33,23 +37,26 @@ export default function SideList() {
         anchorEl={anchorEl}
         placement={placement}
         transition
-        
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            <Paper>
-                <Typography color='secondary' component='h2' sx={{ p: 4 }}>Chats</Typography>
-                <Typography sx={{ p: 2 }}>{users[0].name}</Typography>
-                <Typography sx={{ p: 2 }}>{users[1].name}</Typography>
-                <Typography sx={{ p: 2 }}>{users[0].name}</Typography>
-                <Typography sx={{ p: 2 }}>{users[2].name}</Typography>
+            <Paper component="ul" sx={{
+              listStyle: 'none',
+              padding: 0
+            }}>
+                <Typography color='secondary' variant='h5' sx={{ p: 4 }}>Chats</Typography>
+                
+                {chats.map(({name}) => {
+                  return (
+                    <Typography component="li" sx={{ p: 4, pt: 0 }} key={name}>{name}</Typography>
+                  )
+                })}
             </Paper>
           </Fade>
         )}
       </Popper>
       <Grid container sx={{ justifyContent: 'center' }}>
         <Grid>
-            {/* <Button onClick={handleClick('right')}>{users[0].name}<br/>{users[1].name}<br/>{users[2].name}</Button> */}
             <Tooltip title="Show all chats">
             <IconButton onClick={handleClick('right')} sx={
             {
@@ -84,4 +91,6 @@ export default function SideList() {
       </Grid>
     </Box>
   );
-}
+});
+
+export default SideList;

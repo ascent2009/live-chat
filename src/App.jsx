@@ -1,25 +1,23 @@
-import { useState } from 'react'
-import CssBaseline from '@mui/material/CssBaseline';  
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import WelcomePage from "./components/WelcomePage";
-import HomePage from "./components/HomePage";
-import ColorMode from "./components/ColorMode";
+import { BrowserRouter, Routes, Route } from "react-router";
+import Login from './components/Login';
+import WelcomePage from './components/WelcomePage';
+import HomePage from './components/HomePage';
+import Layout from './components/Layout';
+import Settings from './components/Settings';
 
-
-const theme = createTheme({
-  colorSchemes: {
-    dark: true,
-  },
-});
 
 export default function App() {
-  const [user, setUser] = useState(true);
-
+  
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline enableColorScheme/>
-      <ColorMode />
-      {!user ? <HomePage /> : <WelcomePage />}
-    </ThemeProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<WelcomePage />} />
+          <Route path="home" element={<HomePage />} />
+          <Route path="login" element={<Login />} />
+          <Route path="profile" element={<Settings />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }

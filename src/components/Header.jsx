@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box';
 import SignMenu from './SignMenu';
+import { observer} from "mobx-react-lite";
 
-export default function Header() {
+const Header = observer(() => {
   
   return (
     <Box component="header" pt={2} sx={{
@@ -14,4 +15,6 @@ export default function Header() {
         <SignMenu />
     </Box>
   )
-}
+})
+
+export default Header;

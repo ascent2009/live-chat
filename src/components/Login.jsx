@@ -1,16 +1,23 @@
 import { auth } from "../firebase";
 import { useState, useEffect } from "react";
+import { observer, useLocalObservable  } from "mobx-react-lite";
+import { myUser } from '../mobx'
 import { RecaptchaVerifier, signInWithPhoneNumber  } from "firebase/auth";
 import { Link, useNavigate } from "react-router";
-import 'react-phone-number-input/style.css'
-import PhoneInput from 'react-phone-number-input'
-import { FormGroup, FormControl, FormHelperText } from '@mui/material';
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
+import { FormGroup, FormHelperText, TextField  } from '@mui/material';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Container, Box } from '@mui/material';
-import Input from '@mui/material/Input';
+import CheckPhonePng from "../assets/enterphone.png";
+import SmsPng from "../assets/sms.png";
 
-export default function Login () {
+const Login = observer(() => {
+
+    const isAuthenticated = useLocalObservable(() => myUser);
+    const user = useLocalObservable(() => myUser);
+    
     
     const [phone, setPhone] = useState("");
     const [otp, setOtp] = useState("");
@@ -21,7 +28,7 @@ export default function Login () {
 
     const setUpRecaptha = (phoneNumber) => {
         const recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
-            'size': 'normal',
+            'size': 'invisible',
         });
         recaptchaVerifier.render();
         return signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
@@ -39,17 +46,20 @@ export default function Login () {
         } catch(err) {
             setError(err.message)
         }
-        console.log(phone);
+        
     }
 
     const verifyOTP = async (e) => {
         e.preventDefault();
         console.log(otp);
-        if (!otp) return;
+        if (!otp) return setError("Please enter correct SMS code");
+        // if (!otp) return;
         try {
             setError("")
             await confirm.confirm(otp);
-            navigate("/")
+            isAuthenticated.authenticate;
+            navigate("/home");
+            user.setUserName(phone);
         } catch(err) {
             setError(err.message);
         }
@@ -61,11 +71,11 @@ export default function Login () {
             phoneInputCSS.style.borderRadius = "20px";
             phoneInputCSS.style.padding = "10px";
             phoneInputCSS.style.fontSize = "1rem";
-            phoneInputCSS.style.border = "none";
+            phoneInputCSS.style.border = "2px solid #afaeaeff";
             phoneInputCSS.style.outline = "none";
+            phoneInputCSS.style.backgroundColor = "#ffff";
         }
-        
-    })
+    }, [])
 
     return (
         <Container component="section" maxWidth="xl" sx={{
@@ -76,22 +86,22 @@ export default function Login () {
             margin: "auto",
             width: '100vw',
             height: '100vh',
-            background: "pink",
             gap: 5
         }}>
-        {!show ? <FormGroup as="form"
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                // margin: "auto",
-                width: '60vw',
-                height: '30vh',
-                gap: 5,
-                // justifyContent: "space-around",
-                background: "transparent",
-            }}
-            onSubmit={getOTP}
-        >
+        {!show ? <>
+            <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                <img width="90%" src={CheckPhonePng} alt="check phone"/>
+            </Box>
+            <FormGroup as="form"
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: '60vw',
+                    height: '30vh',
+                    gap: 5,
+                }}
+                onSubmit={getOTP}
+            >
                     <PhoneInput
                         defaultCountry="RU"
                         value={phone}
@@ -118,29 +128,53 @@ export default function Login () {
                         }}>
                     <Box id="sign-in-button"></Box>
                     </Box>
-                  
-                        
-                  
-                </FormGroup> : null}
-        {show ? <FormGroup as="form" onSubmit={verifyOTP}>
-            <FormControl>
-                
-                    <Input
+        </FormGroup></> : null}
+        {show ? <>
+            <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                <img width={250} height={300} src={SmsPng} alt="check sms"/>
+            </Box>
+            <FormGroup as="form" onSubmit={verifyOTP}  sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: '60vw',
+                height: '30vh',
+                gap: 5,
+                background: "transparent",
+            }}>
+                    <TextField
                         type="text"
                         onChange={(e) => setOtp(e.target.value)}
                         placeholder="Enter your SMS code"
+                        min={6}
+                        max={6}
+                        sx={{
+                            '& .css-16wblaj-MuiInputBase-input-MuiOutlinedInput-input': {
+                                textAlign: 'center',
+                                fontSize: '20px',
+                                color: '#4c4040de',
+                                background: '#ffff'
+                            }
+                        }} 
                     />
-                    <br />
-                    <br />
+                    <Box sx={{
+                        height: 20,
+                        mt: -4,
+                    }}>
+                        {error && <FormHelperText sx={{
+                            fontSize: 14,
+                            textAlign: "center",
+                            color: "red"
+                        }}>{error}</FormHelperText>}
+                    </Box>
                     <Button variant="contained" color="secondary" type="submit">
                         Verify OTP
                     </Button>
-                    
-            </FormControl>
-        </FormGroup> : null}
-            <Link to="/">
-                            <Typography variant="h6" color="secondary" align='center'>Cancel</Typography>
-                        </Link>
+        </FormGroup></> : null}
+        <Link to="/">
+            <Typography variant="h6" color="secondary" align='center'>Cancel</Typography>
+        </Link>
         </Container>
     );
-};
+});
+
+export default Login;

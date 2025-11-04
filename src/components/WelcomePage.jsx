@@ -12,7 +12,7 @@ export default function WelcomePage () {
             margin: "auto",
             width: '100vw',
             height: '100vh',
-            background: "pink",
+            // background: "pink",
             gap: 5
         }}>
             <Box>
