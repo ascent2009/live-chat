@@ -4,35 +4,46 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Tooltip from '@mui/material/Tooltip';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { observer, useLocalObservable  } from "mobx-react-lite";
-import { myUser } from '../mobx';
+import { myUser } from '../store/User';
 import { useParams } from 'react-router';
 
 
 const SignMenu = observer(() => {
-  const isAuthenticated = useLocalObservable(() => myUser)
+  const user = useLocalObservable(() => myUser)
   let params = useParams();
+  const badgeContent = user.user.nickname || user.user.name;
   
   return (
     
     <PopupState variant="popover" popupId="demo-popup-menu">
       {(popupState) => (
         <React.Fragment>
-          <IconButton variant="contained" {...bindTrigger(popupState)}>
-            {isAuthenticated.user.isAuthenticated ? <Badge color="success" variant="dot" w="md">    
-              <PermIdentityIcon color="primary" fontSize="large" />
-            </Badge> : null }
-          </IconButton>
           
+            <IconButton variant="contained" {...bindTrigger(popupState)}>
+              {user.user.isAuthenticated ? 
+                <Tooltip title={`${user.user.nickname} ${user.user.name}`} arrow><Badge color="success" badgeContent={badgeContent.length > 6 ? badgeContent.slice(0,6) + "..." : badgeContent} w="md"
+                  anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}>    
+                  <PermIdentityIcon color="primary" fontSize="large" />
+                </Badge>
+                </Tooltip>
+                : null }
+            </IconButton>
+            
+            
+            <Menu {...bindMenu(popupState)}>
+              <MenuItem onClick={popupState.close}><Link to={`/profile/${params.id}`} style={{display: 'flex', alignItems: 'center', gap: 5}}><ManageAccountsIcon/>Settings</Link></MenuItem>
+              <MenuItem onClick={() => {popupState.close; user.signOut}}><Link to='/' style={{display: 'flex', alignItems: 'center', gap: 5}}><LogoutIcon />Sign-out</Link></MenuItem>
+            </Menu>
           
-          <Menu {...bindMenu(popupState)}>
-            <MenuItem onClick={popupState.close}><Link to={`/profile/${params.id}`} style={{display: 'flex', alignItems: 'center', gap: 5}}><ManageAccountsIcon/>Settings</Link></MenuItem>
-            <MenuItem onClick={() => {popupState.close; isAuthenticated.signOut}}><Link to='/' style={{display: 'flex', alignItems: 'center', gap: 5}}><LogoutIcon />Sign-out</Link></MenuItem>
-          </Menu>
         </React.Fragment>
       )}
     </PopupState>

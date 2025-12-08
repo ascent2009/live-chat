@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import {FormGroup, FormHelperText, TextField} from '@mui/material';
 import { useParams, useNavigate } from "react-router";
 import { observer, useLocalObservable  } from "mobx-react-lite";
-import { myUser } from '../mobx';
+import { myUser } from '../store/User';
 
 
  const Settings = observer(() => {

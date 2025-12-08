@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Popper from '@mui/material/Popper';
@@ -9,30 +7,32 @@ import IconButton from '@mui/material/IconButton';
 import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
+import Badge from '@mui/material/Badge';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
-import {users} from '../data'
 import { observer, useLocalObservable  } from "mobx-react-lite";
+import { toJS } from 'mobx';
+import { myUser } from '../store/User';
+import { Link } from "react-router";
 
 
-const SideList = observer(() => {
-    // const [ open, setOpen ] = React.useState(false);    
+const SideList = observer(({params}) => {
     const [openSide, setOpenSide] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [placement, setPlacement] = React.useState();
-
-    const chats = useLocalObservable(() => users)
-  
+    const chats = useLocalObservable(() => myUser)
+      
     const handleClick = (newPlacement) => (event) => {
       setAnchorEl(event.currentTarget);
       setOpenSide((prev) => placement !== newPlacement || !prev);
       setPlacement(newPlacement);
     };
+
   return (
-    <Box sx={{ width: 500 }}>
+    <Box>
       <Popper
         // Note: The following zIndex style is specifically for documentation purposes and may not be necessary in your application.
-        sx={{ zIndex: 1200 }}
+        sx={{ zIndex: 1200, margin: "5px" }}
         open={openSide}
         anchorEl={anchorEl}
         placement={placement}
@@ -42,13 +42,18 @@ const SideList = observer(() => {
           <Fade {...TransitionProps} timeout={350}>
             <Paper component="ul" sx={{
               listStyle: 'none',
-              padding: 0
+              padding: 0,
             }}>
                 <Typography color='secondary' variant='h5' sx={{ p: 4 }}>Chats</Typography>
                 
-                {chats.map(({name}) => {
+                {toJS(chats.users).flat().map(({id, nickname, name}, index) => {
+                  const url = `/user/${id}`
+                  
                   return (
-                    <Typography component="li" sx={{ p: 4, pt: 0 }} key={name}>{name}</Typography>
+                      <Box component="li" sx={{ p: 4, pt: 0, display: "flex", gap: 7, alignItems: "center", mr: "30px" }} key={index}>
+                        <Link href={id !== params && url} target="_blank" style={{pointerEvents: id === params && "none", opacity: id === params && 0.3}} onClick={chats.setAuthenticate = "true"}>{nickname || name}</Link>
+                        {id === params ? <Badge color="success" badgeContent="now active" sx={{"& span": {p:2}}} /> : null}
+                      </Box>
                   )
                 })}
             </Paper>
@@ -93,4 +98,4 @@ const SideList = observer(() => {
   );
 });
 
-export default SideList;
+export default React.memo(SideList);

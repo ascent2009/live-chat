@@ -1,11 +1,10 @@
 import {useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { FormGroup, FormHelperText, FormLabel, TextField  } from '@mui/material';
 import { observer, useLocalObservable } from "mobx-react-lite";
-import { myUser } from '../mobx';
+import { myUser } from '../store/User';
 
 const style = {
   position: 'absolute',
@@ -30,7 +29,7 @@ const ModalAlias = observer(({open, setOpen}) => {
 
   const handleChange = (e) => {
     setInput(e.target.value);
-    console.log(input);
+    // console.log(input);
   }
   
   const handleSubmit = (e) => {
@@ -40,7 +39,7 @@ const ModalAlias = observer(({open, setOpen}) => {
     
     try {
         user.setNickName = input;
-        console.log('user.setNickName: ', user.user.nickname);
+        // console.log('user.setNickName: ', user.user.nickname);
         handleClose();
     } catch(err) {
         setError(err.message);

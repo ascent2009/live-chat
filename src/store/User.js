@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getDatabase, ref, onValue } from "firebase/database";
 
-class User {
+export class User {
     user = {
         id: 0,
         name: "",
@@ -15,13 +15,8 @@ class User {
         makeAutoObservable(this) 
     }
     set setUserID(val) {
-        // this.user.id++;
         this.user.id = val;
     }
-
-    // increment() {
-    //     this.user.id++;
-    // }
 
     get userID() {
        return this.user.id;
@@ -34,7 +29,7 @@ class User {
         this.user["nickname"] = val;
     }
 
-    getUserName() {
+    get userName() {
         return this.user["name"];
     }
 
@@ -55,10 +50,6 @@ class User {
         return this.user["isAuthenticated"];
     }
 
-    // set setUser(val) {
-    //     this.user = set(ref(getDatabase(), `users/${this.user.id}`), val);
-    // }
-
     get fetchUsers () {
         const db = ref(getDatabase(), 'users');
         onValue(db, (snapshot) => {
@@ -70,27 +61,17 @@ class User {
         });
         return this.users;
     }
-    fetchUser (id) {
-        const db = ref(getDatabase(), `users/${id}`);
-        // const db = ref(getDatabase(), `users/dcf276c4-2684-4f63-a8bf-0d4ce6e5fb64`);
+    fetchUser (url) {
+        const db = ref(getDatabase(), url);
         onValue(db, (snapshot) => {
-        const data = snapshot.val();
-        // const obj = Object.keys(data).map((sn) => data[sn])
-        // runInAction(() => {
-            this.user = data;
-        // });
-        // });
-        
+            const data = snapshot.val();
+            this.setUserID = data.id;
+            this.setUserName(data.name);
+            this.setNickName = data.nickname;
+            this.setAuthenticate = true;
         })
-        return this.user
     }
-    
+
 }
 
 export const myUser = new User();
-
-// const user = myUser.fetchUser("dcf276c4-2684-4f63-a8bf-0d4ce6e5fb64")
-// console.log(user)
-
-
-

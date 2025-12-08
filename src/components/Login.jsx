@@ -1,7 +1,7 @@
 import { auth } from "../firebase";
 import { useState, useEffect } from "react";
 import { observer, useLocalObservable  } from "mobx-react-lite";
-import { myUser } from '../mobx';
+import { myUser } from '../store/User';
 import { RecaptchaVerifier, signInWithPhoneNumber  } from "firebase/auth";
 import { Link, useNavigate } from "react-router";
 import 'react-phone-number-input/style.css';
@@ -32,10 +32,8 @@ const Login = observer(() => {
 
     const checkName = toJS(user.users).flat().some(cn => cn.name === phone);
     const findID = toJS(user.users).flat().find(cn => cn.name === phone ? cn.id : '');
-    // console.log(findID.id);
     
-    
-    const setUpRecaptha = (phoneNumber) => {
+    const setUpRecaptcha = (phoneNumber) => {
         const recaptchaVerifier = new RecaptchaVerifier(auth, 'sign-in-button', {
             'size': 'invisible',
         });
@@ -54,14 +52,16 @@ const Login = observer(() => {
     const getOTP = async (e) => {
         e.preventDefault();
         setError("")
-        if (!phone) return setError("Please enter a valid phone number");
+        if (!phone) {
+            return setError("Please enter a valid phone number")
+        };
         if (checkName) {
             user.setAuthenticate = true;
             navigate(`/user/${findID.id}`)
             console.log(findID.id);
         };
         try {
-            const response = await setUpRecaptha(phone)
+            const response = await setUpRecaptcha(phone)
             setConfirm(response);
             openModal();
             setShow(true);
@@ -107,7 +107,7 @@ const Login = observer(() => {
             phoneInputCSS.style.outline = "none";
             phoneInputCSS.style.backgroundColor = "#ffff";
         };
-        user.fetchUsers
+        user.fetchUsers;
     }, [])
 
     
@@ -159,8 +159,8 @@ const Login = observer(() => {
                         }}>{error}</FormHelperText>}
                     </Box>
                     <FormControlLabel
-                        // required
-                        control={<Checkbox onChange={handleChange}
+                        disabled={checkName && true}
+                        control={<Checkbox onChange={handleChange} 
                         color="secondary" />}
                         label="Check if you want to use a nickname as login (phone number is used by default)" 
                         sx={{
@@ -171,7 +171,6 @@ const Login = observer(() => {
                                 width: "100%"
                             }
                         }}
-                        // labelPlacement="bottom"
                     />
                     <Button variant="contained" color="secondary" type="submit">
                         Send OTP
