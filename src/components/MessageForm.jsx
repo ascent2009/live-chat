@@ -13,18 +13,21 @@ const MessageForm = observer(({params}) => {
     const message = useLocalObservable(() => myMessage);
     const user = useLocalObservable(() => myUser);
     
-    // console.log(user.user.nickname);
-    
     const handleChange = (e) => {
         setInput(e.target.value);
         setError("");
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" && !e.shiftKey && "form" in e.target) {
+            e.preventDefault();
+            e.target.form.requestSubmit();
+        }
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setError("");
-        setInput("");
-
     // const writeMessage = () => {
     //     user.setUserID = uuidv4();
     //     user.setUserName(phone);
@@ -55,14 +58,17 @@ const MessageForm = observer(({params}) => {
             // message.postMessage(message.message.id)
             // console.log(message.messages);
             myMessage.setAnimation = true;
-            console.log('message.setAnimation: ', myMessage.animation);
+            setInput("");
         } catch(err) {
             setError(err.message);
         }
+        
     }
 
     return (
-        <FormGroup as="form" onSubmit={handleSubmit} sx={{
+        <FormGroup as="form"
+            onSubmit={handleSubmit}
+            sx={{
                 display: "flex",
                 flexDirection: "row",
                 gap: 2,
@@ -74,14 +80,16 @@ const MessageForm = observer(({params}) => {
                 borderRadius: "10px"
             }}>
             <Box sx={{flexGrow: 1}}>
-                <Input multiline id="my-input" aria-describedby="my-helper-text" onChange={handleChange} sx={{
-                    width: "100%",
-                    outline: "none",
-                    padding: 0,
-                    '.css-1u90fv-MuiInputBase-root-MuiInput-root:hover:not::active': {
-                        borderBottom: "none"
-                    }
-                }}/>
+                <Input multiline id="my-input" aria-describedby="my-helper-text" value={input} onChange={handleChange} sx={{
+                        width: "100%",
+                        outline: "none",
+                        padding: 0,
+                        '.css-1u90fv-MuiInputBase-root-MuiInput-root:hover:not::active': {
+                            borderBottom: "none"
+                        }
+                    }}
+                    onKeyDown={handleKeyDown}
+                />
                 {error && <FormHelperText sx={{
                             fontSize: 14,
                             textAlign: "center",

@@ -44,9 +44,9 @@ const SideList = observer(({params}) => {
               listStyle: 'none',
               padding: 0,
             }}>
-                <Typography color='secondary' variant='h5' sx={{ p: 4 }}>Chats</Typography>
+                <Typography color='secondary' variant='h5' sx={{ p: 4 }}>Chats & Contacts</Typography>
                 
-                {toJS(chats.users).flat().map(({id, nickname, name}, index) => {
+                {toJS(chats.users)[0].map(({id, nickname, name}, index) => {
                   const url = `/user/${id}`
                   
                   return (
