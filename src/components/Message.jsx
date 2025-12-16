@@ -5,7 +5,7 @@ import { myMessage } from '../store/Message';
 import {Paper, keyframes} from '@mui/material';
 import Typography from '@mui/material/Typography';
 
-const Message = observer(({messages}) => {
+const Message = observer(({nick, name, id, createdAt, text}) => {
 
     const divRef = useRef(null);
     const message = useLocalObservable(() => myMessage);
@@ -23,35 +23,32 @@ const Message = observer(({messages}) => {
  `;
 
     return (
-        <>
-            {messages.map(({nick, name, id, createdAt, text}) => {
-                return (
-                    <Paper elevation={3} square={false} ref={divRef} key={id} sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        position: "relative",
-                        transform: "rotate(180deg)",
-                        width: "85%",
-                        padding: "10px 15px",
-                        borderRadius: "20px",
-                        background: name === user.user.name ? "#b4cfe9ff" : "white",
-                        alignSelf: name === user.user.name ? "flex-start" : "flex-end",
-                        gap: 1.5,
-                        '&:last-child': {
-                        animation: message.animation && `${bounceInBottom} 0.7s both`,
-                        },
-                    }}> 
-                        {name === user.user.name || <Typography color="success">{nick || name}</Typography>}
-                        <Typography component="h4" fontSize={16} color="secondary" sx={{
-                        wordBreak: "break-all"
-                        }}>
-                        {text}
-                        </Typography>
-                        <Typography alignSelf="flex-end" color="primary" fontSize={12}>{createdAt}</Typography>
-                    </Paper>
-                    )}
-                )}
-        </>      
+        <Paper elevation={3} square={false} ref={divRef} key={id} sx={{
+             display: "flex",
+             flexDirection: "column",
+             position: "relative",
+             transform: "rotate(180deg)",
+             width: "85%",
+             padding: "10px 15px",
+             borderRadius: "20px",
+             borderTopLeftRadius: name === user.user.name && 0,
+             borderBottomRightRadius: name !== user.user.name && 0,
+             background: name === user.user.name ? "#b4cfe9ff" : "white",
+             alignSelf: name === user.user.name ? "flex-start" : "flex-end",
+             gap: 1.5,
+             '&:last-child': {
+             animation: message.animation && `${bounceInBottom} 0.7s both`,
+             },
+         }}> 
+             {name === user.user.name || <Typography color="success">{nick || name}</Typography>}
+             <Typography component="h4" fontSize={16} color="secondary" sx={{
+             wordBreak: "break-all"
+             }}>
+             {text}
+             </Typography>
+             <Typography alignSelf="flex-end" color="primary" fontSize={12}>{createdAt}</Typography>
+        </Paper>
+       
     )
 })
 

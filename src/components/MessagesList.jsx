@@ -3,8 +3,8 @@ import { observer, useLocalObservable } from "mobx-react-lite";
 // import { myUser } from '../store/User';
 // import { myMessage } from '../store/Message';
 import Box from '@mui/material/Box';
-import {Stack} from '@mui/material';
-import Typography from '@mui/material/Typography';
+import {Stack, Typography} from '@mui/material';
+import ListItem from '@mui/material/ListItem';
 import Message from './Message';
 import { getDatabase, ref, onValue } from "firebase/database";
 
@@ -21,15 +21,7 @@ const MessagesList = observer(() => {
         const db = ref(getDatabase(), 'messages');
         onValue(db, (snapshot) => {
           const data = snapshot.val();
-          const obj = Object.keys(data)
-            .map((sn) =>  {
-              const sub = data[sn];
-              return Object.keys(sub)
-                .map(s => sub[s])
-                }
-            ).flat()
-            .sort((a, b) => a["id"] - b["id"]);
-          setMessages(obj)  
+        setMessages(data)
         });
  };
 
@@ -50,8 +42,7 @@ const MessagesList = observer(() => {
     } 
   }, []);
 
-  console.log(messages);
-    return (
+  return (
         <Box sx={{
             flexGrow: 1,
             width: "100%",
@@ -60,14 +51,59 @@ const MessagesList = observer(() => {
             overflow: "auto",
             transform: "rotate(180deg)",
             transition: "filter 1s linear",
-            // filter: "blur(2px)",
             }}>
-            <Stack spacing={2} sx={{
+            <Stack component="ul" spacing={2} sx={{
                 display: "flex",
+                padding: 0,
                 flexDirection: "column-reverse",
                 justifyContent: "flex-end",
-                }}>
-                 <Message messages={messages}/>
+                gap: 3,
+                marginY: 0
+            }}>
+                    {Object.keys(messages).map(mesDate => {
+                        const messageIDs = messages[mesDate];
+                        // Date&time processing block - start 
+                        const parts = mesDate.split('-');                        
+                        const dateObj = new Date(parts[2], parts[1] - 1, parts[0]); // Месяцы в JS от 0 до 11
+                        const dateOfMessage = dateObj.getDate();
+                        const toDay = new Date(Date.now()).getDate();
+                        function getWeekDay(date) {
+                            let days = ['mon', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+                            return days[date.getDay()];
+                        }
+                        console.log('messageIDs: ', dateOfMessage === toDay);
+                        // Date&time processing block - end 
+                        return (
+                            <ListItem component="li" key={mesDate} sx={{display: "flex", flexDirection: "column-reverse", gap: 2, padding: 0}}>
+                                <Typography color="info" component="h2" variant="h6" sx={{transform: "rotate(180deg)"}}>{dateOfMessage === toDay ? "today" : getWeekDay(dateObj)}, {mesDate.replaceAll("-", ".")}</Typography>
+                                <Stack component="ul" sx={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    // transform: "rotate(180deg)",
+                                    padding: 0,
+                                    width: "100%",
+                                    gap: 3
+                                    }}>
+                                    <ListItem component="li" sx={{display: "flex", flexDirection: "column-reverse", padding: 0, gap: 2}}>
+                                        {Object.keys(messageIDs).map(message => {
+                                            const {text, nick, id, name, createdAt, date} = messages[mesDate][message]
+                                            return (
+                                                <Message key={id}
+                                                        nick={nick}
+                                                        name={name}
+                                                        id={id}
+                                                        createdAt={createdAt}
+                                                        text={text}
+                                                        date={date}
+                                                        />
+                                            )
+                                        })}     
+                                   </ListItem>
+                                </Stack>
+                            </ListItem>
+                        )
+                        })
+                    }
             </Stack>
         </Box>
     )

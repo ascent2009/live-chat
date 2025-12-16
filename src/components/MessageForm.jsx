@@ -45,6 +45,7 @@ const MessageForm = observer(({params}) => {
         if (!input) return setError("Please enter a valid text");
         // let countID = 0;
         try {
+            
             message.setMessage = {
                 name: user.user.name,
                 nick: user.user.nickname,
@@ -52,17 +53,16 @@ const MessageForm = observer(({params}) => {
                 // id: parseInt(Math.random() * 1000),
                 id: new Date().getTime(),
                 text: input,
-                createdAt: new Date().toLocaleTimeString()
+                createdAt: new Date().toLocaleTimeString(),
+                date: new Date().toLocaleDateString()
             };
-            set(ref(getDatabase(), `messages/${params}/${message.message.id}`), message.message);
+            set(ref(getDatabase(), `messages/${new Date().toLocaleDateString().replaceAll(".", "-")}/${message.message.id}`), message.message);
             // message.postMessage(message.message.id)
-            // console.log(message.messages);
             myMessage.setAnimation = true;
             setInput("");
         } catch(err) {
             setError(err.message);
         }
-        
     }
 
     return (
@@ -77,16 +77,13 @@ const MessageForm = observer(({params}) => {
                 background: "#f5dcdcff",
                 padding: "10px",
                 border: "1px solid #1976d2",
-                borderRadius: "10px"
+                borderRadius: "10px",
             }}>
             <Box sx={{flexGrow: 1}}>
-                <Input multiline id="my-input" aria-describedby="my-helper-text" value={input} onChange={handleChange} sx={{
+                <Input multiline disableUnderline={true} id="my-input" aria-describedby="my-helper-text" value={input} onChange={handleChange} sx={{
                         width: "100%",
                         outline: "none",
                         padding: 0,
-                        '.css-1u90fv-MuiInputBase-root-MuiInput-root:hover:not::active': {
-                            borderBottom: "none"
-                        }
                     }}
                     onKeyDown={handleKeyDown}
                 />

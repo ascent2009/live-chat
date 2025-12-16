@@ -29,7 +29,6 @@ const ModalAlias = observer(({open, setOpen}) => {
 
   const handleChange = (e) => {
     setInput(e.target.value);
-    // console.log(input);
   }
   
   const handleSubmit = (e) => {
@@ -39,7 +38,6 @@ const ModalAlias = observer(({open, setOpen}) => {
     
     try {
         user.setNickName = input;
-        // console.log('user.setNickName: ', user.user.nickname);
         handleClose();
     } catch(err) {
         setError(err.message);

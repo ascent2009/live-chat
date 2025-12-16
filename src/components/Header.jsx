@@ -5,7 +5,7 @@ import { observer} from "mobx-react-lite";
 const Header = observer(() => {
   
   return (
-    <Box component="header" pt={2} sx={{
+    <Box component="header" py={2} sx={{
       display: 'flex',
       justifyContent: 'flex-end',
       alignItems: 'center',
