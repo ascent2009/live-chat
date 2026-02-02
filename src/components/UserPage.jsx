@@ -17,7 +17,7 @@ const UserPage = observer(() => {
   let params = useParams();
   
   const user = useLocalObservable(() => myUser);
- 
+  
   useEffect(() => {
     try {
       if (!user.user.isAuthenticated) {

@@ -1,21 +1,23 @@
 import { useEffect, useState, useRef } from 'react';
 import { observer, useLocalObservable } from "mobx-react-lite";
-// import { myUser } from '../store/User';
-// import { myMessage } from '../store/Message';
+import {toJS} from "mobx"
+import { myUser } from '../store/User';
+import { myMessage } from '../store/Message';
 import Box from '@mui/material/Box';
 import {Stack, Typography} from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import Message from './Message';
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, remove } from "firebase/database";
 
 const MessagesList = observer(() => {
 
-  const [messages, setMessages] = useState(([]))
+  const [messages, setMessages] = useState();
   const divRef = useRef(null);
 
   
 //   const user = useLocalObservable(() => myUser);
-//   const message = useLocalObservable(() => myMessage);
+  const message = useLocalObservable(() => myMessage);
+  const user = useLocalObservable(() => myUser);
   
   function fetchMessages() {
         const db = ref(getDatabase(), 'messages');
@@ -25,10 +27,27 @@ const MessagesList = observer(() => {
         });
  };
 
-  useEffect(() => {
-    try {
-      fetchMessages();
+//  const handleDeleteMessage = (messageId, date) => {
+//     // const filtered = Object.keys(messages).map(mesDate => {
+//     //   const messageIDs = messages[mesDate];
+//     //   return Object.keys(messageIDs).map(message => {
+//     //     // const {text, nick, id, name, createdAt, date} = messages[mesDate][message]
+//     //     // console.log('messages[mesDate][message]: ', messages[mesDate][message]);
+//     //     return messages[mesDate][message];
+//     //     // .filter(item => item.id !== messageId)
+//     //   }).filter(item => {
+//     //     // console.log('messageId: ', item.id === messageId, item.id, messageId);  
+//     //     return item.id !== messageId
+//     //   })
+//     // })
+//     const db = ref(getDatabase(), `/messages/${date.replaceAll(".", "-")}/${messageId}`);
+//     remove(db);
+//     console.log(messageId, date.replaceAll(".", "-"))
+//  }
 
+ useEffect(() => {
+    try {
+        fetchMessages();
       if (divRef && divRef.current)
         divRef.current.scrollIntoView(
           {
@@ -41,6 +60,8 @@ const MessagesList = observer(() => {
       console.log('err: ', err.message);
     } 
   }, []);
+
+  console.log("messages: ", messages);
 
   return (
         <Box sx={{
@@ -60,7 +81,7 @@ const MessagesList = observer(() => {
                 gap: 3,
                 marginY: 0
             }}>
-                    {Object.keys(messages).map(mesDate => {
+                    {messages ? Object.keys(messages).map(mesDate => {
                         const messageIDs = messages[mesDate];
                         // Date&time processing block - start 
                         const parts = mesDate.split('-');                        
@@ -71,7 +92,7 @@ const MessagesList = observer(() => {
                             let days = ['mon', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
                             return days[date.getDay()];
                         }
-                        console.log('messageIDs: ', dateOfMessage === toDay);
+                        {/* console.log('messageIDs: ', dateOfMessage === toDay); */}
                         // Date&time processing block - end 
                         return (
                             <ListItem component="li" key={mesDate} sx={{display: "flex", flexDirection: "column-reverse", gap: 2, padding: 0}}>
@@ -86,16 +107,20 @@ const MessagesList = observer(() => {
                                     }}>
                                     <ListItem component="li" sx={{display: "flex", flexDirection: "column-reverse", padding: 0, gap: 2}}>
                                         {Object.keys(messageIDs).map(message => {
-                                            const {text, nick, id, name, createdAt, date} = messages[mesDate][message]
+                                            const {text, nick, id, name, createdAt, date, changed} = messages[mesDate][message]
+                                            
                                             return (
-                                                <Message key={id}
-                                                        nick={nick}
-                                                        name={name}
-                                                        id={id}
-                                                        createdAt={createdAt}
-                                                        text={text}
-                                                        date={date}
-                                                        />
+                                              <Message
+                                                  key={id}
+                                                  nick={nick}
+                                                  name={name}
+                                                  id={id}
+                                                  createdAt={createdAt}
+                                                  text={text}
+                                                  date={date}
+                                                  changed={changed}
+                                                  // handleDeleteMessage={handleDeleteMessage}
+                                              />
                                             )
                                         })}     
                                    </ListItem>
@@ -103,8 +128,9 @@ const MessagesList = observer(() => {
                             </ListItem>
                         )
                         })
-                    }
+                    : null}
             </Stack>
+            <h2>{myMessage.input}</h2>
         </Box>
     )
 })

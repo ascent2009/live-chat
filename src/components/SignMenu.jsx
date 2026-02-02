@@ -5,6 +5,7 @@ import Badge from '@mui/material/Badge';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
+import Avatar from '@mui/material/Avatar';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -19,6 +20,8 @@ const SignMenu = observer(() => {
   let params = useParams();
   const badgeContent = user.user.nickname || user.user.name;
   
+  console.log('nick> av: ', user.user.nickname);
+  
   return (
     
     <PopupState variant="popover" popupId="demo-popup-menu">
@@ -32,12 +35,14 @@ const SignMenu = observer(() => {
                   vertical: 'bottom',
                   horizontal: 'left',
                 }}>    
-                  <PermIdentityIcon color="primary" fontSize="large" />
+                  {user.user.nickname 
+                  ? <Avatar src={user.user.avatar} alt="avatar">{user.user.nickname[0].toUpperCase()}</Avatar>
+                  : <PermIdentityIcon color="primary" fontSize="large" />}
                 </Badge>
                 </Tooltip>
                 : null }
+                
             </IconButton>
-            
             
             <Menu {...bindMenu(popupState)}>
               <MenuItem onClick={popupState.close}><Link to={`/profile/${params.id}`} style={{display: 'flex', alignItems: 'center', gap: 5}}><ManageAccountsIcon/>Settings</Link></MenuItem>

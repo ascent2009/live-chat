@@ -1,15 +1,67 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { observer, useLocalObservable } from "mobx-react-lite";
 import { myUser } from '../store/User';
 import { myMessage } from '../store/Message';
 import {Paper, keyframes} from '@mui/material';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
+// import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SimpleDialog from './DialogConfirm';
+import EditInput from './EditInput';
 
-const Message = observer(({nick, name, id, createdAt, text}) => {
-
+const Message = observer(({nick, name, id, createdAt, date, text, changed}) => {
+  
     const divRef = useRef(null);
     const message = useLocalObservable(() => myMessage);
     const user = useLocalObservable(() => myUser);
+    const [contextMenu, setContextMenu] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [edit, setEdit] = useState(false);
+
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+
+      setContextMenu(
+        contextMenu === null
+          ? {
+              mouseX: event.clientX + 2,
+              mouseY: event.clientY - 6,
+            }
+          : // repeated contextmenu when it is already open closes it with Chrome 84 on Ubuntu
+            // Other native context menus might behave different.
+            // With this behavior we prevent contextmenu from the backdrop to re-locale existing context menus.
+            null,
+      );
+
+      // Prevent text selection lost after opening the context menu on Safari and Firefox
+      const selection = document.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+
+        setTimeout(() => {
+          selection.addRange(range);
+        });
+      }
+    };
+
+    const handleOpenDialog = () => {
+      setOpen(!open);
+    };
+
+    const handleEdit = () => {
+      setEdit(!edit);
+      handleClose();
+    };
+
+    const handleClose = () => {
+      setContextMenu(null);
+    };
+
 
     const bounceInBottom = keyframes`
     0% {
@@ -23,6 +75,8 @@ const Message = observer(({nick, name, id, createdAt, text}) => {
  `;
 
     return (
+      <>
+        {/* <Avatar src={name === user.user.name ? user.user.avatar : null} sx={{transform: "rotate(180deg)", width: 32, height: 32 }}/> */}
         <Paper elevation={3} square={false} ref={divRef} key={id} sx={{
              display: "flex",
              flexDirection: "column",
@@ -39,16 +93,55 @@ const Message = observer(({nick, name, id, createdAt, text}) => {
              '&:last-child': {
              animation: message.animation && `${bounceInBottom} 0.7s both`,
              },
-         }}> 
+         }}
+            onContextMenu={handleContextMenu}
+         > 
              {name === user.user.name || <Typography color="success">{nick || name}</Typography>}
              <Typography component="h4" fontSize={16} color="secondary" sx={{
              wordBreak: "break-all"
              }}>
              {text}
              </Typography>
-             <Typography alignSelf="flex-end" color="primary" fontSize={12}>{createdAt}</Typography>
+             {/* <Typography alignSelf="flex-end" color="action" fontSize={12}></Typography> */}
+             <Typography alignSelf="flex-end" color="primary" fontSize={12}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2
+
+              }}>
+                <Typography fontSize={12} color="success">{changed}</Typography>{createdAt}
+              </Typography>
         </Paper>
-       
+        {contextMenu && 
+          <Menu
+            open={contextMenu !== null}
+            onClose={handleClose}
+            anchorReference="anchorPosition"
+            anchorPosition={
+              contextMenu !== null
+                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                : undefined
+            }
+          >
+            {name !== user.user.name ? null : <MenuItem onClick={handleEdit} sx={{display: "flex", gap: 1, alignItems: "center"}}><EditIcon color="action" />Edit message</MenuItem>}
+            <MenuItem
+              onClick={
+              // () => {
+              //   handleDeleteMessage(id, date)
+              //   handleClose()
+              //   }
+                handleOpenDialog
+              }
+              sx={{display: "flex", gap: 1, alignItems: "center"}}><DeleteIcon color="action"
+              />
+                Delete message
+            </MenuItem>
+          </Menu>
+        }
+        {open && <SimpleDialog open={open} handleOpenDialog={handleOpenDialog} id={id} date={date} />}
+        {edit && <EditInput handleEdit={handleEdit} handleOpenDialog={handleOpenDialog} id={id} date={date} text={text} createdAt={createdAt} />}
+      </>
     )
 })
 

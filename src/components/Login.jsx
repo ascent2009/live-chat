@@ -26,6 +26,7 @@ const Login = observer(() => {
     const [show, setShow] = useState(false);
     const [confirm, setConfirm] = useState(null);
     const [error, setError] = useState("");
+    // const [errorModal, setErrorModal] = useState("");
     const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
@@ -70,6 +71,20 @@ const Login = observer(() => {
         }
     }
 
+    const handleSubmit = (e, val, fn) => {
+    e.preventDefault();
+    setError("");
+    if (!val) return setError("Please enter a valid text");
+    
+    try {
+        user.setNickName = val;
+        fn();
+    } catch(err) {
+        setError(err.message);
+    }
+  }
+
+
     const writeUserData = () => {
         user.setUserID = uuidv4();
         user.setUserName(phone);
@@ -78,7 +93,8 @@ const Login = observer(() => {
             id: user.user.id,
             name: user.user.name,
             nickname: user.user.nickname,
-            isAuthenticated: user.user.isAuthenticated
+            isAuthenticated: user.user.isAuthenticated,
+            avatar: user.user.avatar
         }
         console.log(obj);
         set(ref(getDatabase(), `users/${user.user.id}`), obj);
@@ -229,7 +245,7 @@ const Login = observer(() => {
             <Typography variant="h6" color="secondary" align='center'>Cancel</Typography>
         </Link>
         </Container>
-        {open ? <ModalAlias open={open} setOpen={setOpen} />  : null}
+        {open ? <ModalAlias open={open} setOpen={setOpen} handleSubmit={handleSubmit} error={error} />  : null}
         </>
     );
 });

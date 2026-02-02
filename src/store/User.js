@@ -7,6 +7,7 @@ export class User {
         name: "",
         nickname: "",
         isAuthenticated: false,
+        avatar: ""
     }
 
     users = [];
@@ -40,6 +41,10 @@ export class User {
     set setAuthenticate (bool) {
         this.user.isAuthenticated = bool;
     }
+
+    set setAvatar (url) {
+        this.user.avatar = url;
+    }
     
     get authenticate () {
         return this.user["isAuthenticated"];
@@ -69,6 +74,7 @@ export class User {
             this.setUserName(data.name);
             this.setNickName = data.nickname;
             this.setAuthenticate = true;
+            this.setAvatar = data.avatar;
         })
     }
 

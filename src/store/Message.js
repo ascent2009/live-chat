@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import { getDatabase, ref, set, onValue, remove } from "firebase/database";
 import { User } from './User'
 
 
@@ -11,10 +11,21 @@ class Message {
         id: 0,
         text: "",
         createdAt: "",
+        changed: ""
     }
 
     messages = [];
     animation = false;
+
+    input = ""
+
+    set setInput(val) {
+        this.input = val
+    }
+
+    get getInput() {
+        return this.input
+    }
 
     constructor() {
         makeAutoObservable(this)
@@ -53,6 +64,11 @@ class Message {
 
     set setAnimation(bool) {
         this.animation = bool;
+    }
+
+    handleDeleteMessage(messageId, date) {
+        const db = ref(getDatabase(), `/messages/${date.replaceAll(".", "-")}/${messageId}`);
+        remove(db);
     }
 }
 

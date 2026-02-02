@@ -8,12 +8,15 @@ import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import Badge from '@mui/material/Badge';
+import Avatar from '@mui/material/Avatar';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { observer, useLocalObservable  } from "mobx-react-lite";
 import { toJS } from 'mobx';
 import { myUser } from '../store/User';
 import { Link } from "react-router";
+import Search from './Search';
+import { Divider } from '@mui/material';
 
 
 const SideList = observer(({params}) => {
@@ -43,15 +46,29 @@ const SideList = observer(({params}) => {
             <Paper component="ul" sx={{
               listStyle: 'none',
               padding: 0,
+              paddingTop: 0.1
             }}>
-                <Typography color='secondary' variant='h5' sx={{ p: 4 }}>Chats & Contacts</Typography>
+              <Search />
+              <Divider />
+              <Typography color='secondary' variant='h5' sx={{ p: 4 }}>Chats & Contacts</Typography>
                 
-                {toJS(chats.users)[0].map(({id, nickname, name}, index) => {
+                {toJS(chats.users)[0].map(({id, nickname, name, avatar}, index) => {
                   const url = `/user/${id}`
                   
                   return (
                       <Box component="li" sx={{ p: 4, pt: 0, display: "flex", gap: 7, alignItems: "center", mr: "30px" }} key={index}>
-                        <Link href={id !== params && url} target="_blank" style={{pointerEvents: id === params && "none", opacity: id === params && 0.3}} onClick={chats.setAuthenticate = "true"}>{nickname || name}</Link>
+                        <Link href={id !== params && url} target="_blank"
+                          style={{
+                            pointerEvents: id === params && "none",
+                            opacity: id === params && 0.3,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 50
+                          }}
+                          onClick={chats.setAuthenticate = "true"}>
+                          <Avatar src={avatar} />
+                          {nickname || name}
+                        </Link>
                         {id === params ? <Badge color="success" badgeContent="now active" sx={{"& span": {p:2}}} /> : null}
                       </Box>
                   )

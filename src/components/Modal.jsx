@@ -5,6 +5,7 @@ import Modal from '@mui/material/Modal';
 import { FormGroup, FormHelperText, FormLabel, TextField  } from '@mui/material';
 import { observer, useLocalObservable } from "mobx-react-lite";
 import { myUser } from '../store/User';
+import AvatarUpload from './AvatarUpload';
 
 const style = {
   position: 'absolute',
@@ -20,29 +21,29 @@ const style = {
   flexDirection: "column"
 };
 
-const ModalAlias = observer(({open, setOpen}) => {
+const ModalAlias = observer(({open, setOpen, handleSubmit, error}) => {
 
   const user = useLocalObservable(() => myUser);
   const handleClose = () => setOpen(false);
   const [input, setInput] = useState("");
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setInput(e.target.value);
   }
   
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
-    if (!input) return setError("Please enter a valid text");
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   if (!input) return setError("Please enter a valid text");
     
-    try {
-        user.setNickName = input;
-        handleClose();
-    } catch(err) {
-        setError(err.message);
-    }
-  }
+  //   try {
+  //       user.setNickName = input;
+  //       handleClose();
+  //   } catch(err) {
+  //       setError(err.message);
+  //   }
+  // }
  
   return (
     <div>
@@ -54,11 +55,11 @@ const ModalAlias = observer(({open, setOpen}) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <FormGroup as="form" onSubmit={handleSubmit}  sx={{
+          <FormGroup as="form" onSubmit={(e) => handleSubmit(e, input, handleClose)}  sx={{
                 display: "flex",
                 flexDirection: "column",
-                height: '30vh',
-                gap: 5,
+                height: 'fitContent',
+                gap: 4,
                 background: "transparent",
                 alignItems: "center"
             }}>
@@ -87,6 +88,7 @@ const ModalAlias = observer(({open, setOpen}) => {
                         color: "red"
                     }}>{error}</FormHelperText>}
                 </Box>
+                <AvatarUpload />
                 <Button variant="contained" color="secondary" type="submit">
                     Save
                 </Button>
