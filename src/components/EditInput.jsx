@@ -51,11 +51,12 @@ const EditInput = observer(({text, id, date, createdAt, handleEdit, handleOpenDi
                     padding: "10px",
                     border: "1px solid #1976d2",
                     borderRadius: "10px",
+                    minHeight: "70px",
                     height: "fit-content",
-                    position: "absolute",
+                    position: "relative",
                     transform: "rotate(180deg)",
-                    bottom: 30,
-                    top: 10,
+                    top: 30,
+                    right: 10,
                     zIndex: 2
                 }}
                 onSubmit={handleSubmit}
