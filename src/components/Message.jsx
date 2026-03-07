@@ -4,7 +4,7 @@ import { myUser } from '../store/User';
 import { myMessage } from '../store/Message';
 import {Paper, keyframes} from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 // import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import Menu from '@mui/material/Menu';
@@ -103,15 +103,18 @@ const Message = observer(({nick, name, id, createdAt, date, text, changed}) => {
              {text}
              </Typography>
              {/* <Typography alignSelf="flex-end" color="action" fontSize={12}></Typography> */}
-             <Typography alignSelf="flex-end" color="primary" fontSize={12}
-              sx={{
+             <Box sx={{
                 display: "flex",
                 alignItems: "center",
-                gap: 2
-
+                gap: 2,
+                justifyContent: 'flex-end'
               }}>
-                <Typography fontSize={12} color="success">{changed}</Typography>{createdAt}
+              <Typography fontSize={12} color="success">{changed}</Typography>
+              <Typography alignSelf="flex-end" color="primary" fontSize={12}>
+                {createdAt}
               </Typography>
+              
+             </Box>
         </Paper>
         {contextMenu && 
           <Menu
