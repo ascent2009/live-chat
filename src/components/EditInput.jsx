@@ -8,30 +8,19 @@ import { observer, useLocalObservable } from "mobx-react-lite";
 import { myMessage } from '../store/Message';
 import { myUser } from '../store/User';
 
-const EditInput = observer(({text, id, date, createdAt, handleEdit, handleOpenDialog}) => {
+const EditInput = observer(({text, id, date, handleEdit}) => {
     
-    const message = useLocalObservable(() => myMessage);
-    const user = useLocalObservable(() => myUser);
+    // const message = useLocalObservable(() => myMessage);
+    // const user = useLocalObservable(() => myUser);
     const [input, setInput] = useState("");
     const handleChange = (e) => {
         setInput(e.target.value);
-        // setError("");
     }
 
     const handleSubmit = (e) => {
             e.preventDefault();
             handleEdit();
-            // `https://live-chat-3d7fb-default-rtdb.asia-southeast1.firebasedatabase.app/messages/${date.replaceAll(".", "-")/${id}/${text}`
             const db = ref(getDatabase(), `/messages/${date.replaceAll(".", "-")}/${id}`);
-            // message.setMessage = {
-            //     name: user.user.name,
-            //     nick: user.user.nickname,
-            //     id: id,
-            //     text: input,
-            //     createdAt: createdAt,
-            //     date: date
-            // }
-            // console.log("edit: ", message.message);
             update(db, {
                  text: input, // A timestamp value
                  changed: "changed"
@@ -69,7 +58,6 @@ const EditInput = observer(({text, id, date, createdAt, handleEdit, handleOpenDi
                             p: 0,
                             pr: "30px"
                     }}
-                // onKeyDown={handleKeyDown}
                 />
                 <CloseIcon color="action"
                     sx={{

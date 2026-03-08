@@ -26,7 +26,6 @@ const Login = observer(() => {
     const [show, setShow] = useState(false);
     const [confirm, setConfirm] = useState(null);
     const [error, setError] = useState("");
-    // const [errorModal, setErrorModal] = useState("");
     const [open, setOpen] = useState(false);
     const [checked, setChecked] = useState(false);
     const navigate = useNavigate();
@@ -148,7 +147,8 @@ const Login = observer(() => {
                 sx={{
                     display: "flex",
                     flexDirection: "column",
-                    width: '90%',
+                    width: 'fit-content',
+                    maxWidth: '90%',
                     height: '37vh',
                     gap: 5,
                     background: "rgba(255, 255, 255, 0.8)",

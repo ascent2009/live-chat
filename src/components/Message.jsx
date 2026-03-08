@@ -6,7 +6,6 @@ import {Paper, keyframes} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
-// import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import EditIcon from '@mui/icons-material/Edit';
@@ -76,7 +75,6 @@ const Message = observer(({nick, name, id, createdAt, date, text, changed}) => {
 
     return (
       <>
-        {/* <Avatar src={name === user.user.name ? user.user.avatar : null} sx={{transform: "rotate(180deg)", width: 32, height: 32 }}/> */}
         <Paper elevation={3} square={false} ref={divRef} key={id} sx={{
              display: "flex",
              flexDirection: "column",
@@ -102,7 +100,6 @@ const Message = observer(({nick, name, id, createdAt, date, text, changed}) => {
              }}>
              {text}
              </Typography>
-             {/* <Typography alignSelf="flex-end" color="action" fontSize={12}></Typography> */}
              <Box sx={{
                 display: "flex",
                 alignItems: "center",
@@ -130,10 +127,6 @@ const Message = observer(({nick, name, id, createdAt, date, text, changed}) => {
             {name !== user.user.name ? null : <MenuItem onClick={handleEdit} sx={{display: "flex", gap: 1, alignItems: "center"}}><EditIcon color="action" />Edit message</MenuItem>}
             <MenuItem
               onClick={
-              // () => {
-              //   handleDeleteMessage(id, date)
-              //   handleClose()
-              //   }
                 handleOpenDialog
               }
               sx={{display: "flex", gap: 1, alignItems: "center"}}><DeleteIcon color="action"

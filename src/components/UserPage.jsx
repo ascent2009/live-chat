@@ -31,7 +31,7 @@ const UserPage = observer(() => {
   }, []);
 
   return (
-    <Container maxWidth="sm" sx={{
+    <Container maxWidth="md" sx={{
       display: 'flex',
       flexDirection: 'column',
       width: '100vw',

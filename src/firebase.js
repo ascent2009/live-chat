@@ -7,12 +7,12 @@ import { getDatabase } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-const apiKey = import.meta.env.VITE_API_KEY;
+// const apiKey = import.meta.env.VITE_API_KEY;
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    // apiKey: "AIzaSyCkjlyTBmcTdKGGJrpru6Zgrw93O9ZFV0E",
-    apiKey: apiKey,
+    apiKey: "AIzaSyCkjlyTBmcTdKGGJrpru6Zgrw93O9ZFV0E",
+    // apiKey: apiKey,
     authDomain: "live-chat-3d7fb.firebaseapp.com",
     projectId: "live-chat-3d7fb",
     storageBucket: "live-chat-3d7fb.firebasestorage.app",

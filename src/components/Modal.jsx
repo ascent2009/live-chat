@@ -26,25 +26,11 @@ const ModalAlias = observer(({open, setOpen, handleSubmit, error}) => {
   const user = useLocalObservable(() => myUser);
   const handleClose = () => setOpen(false);
   const [input, setInput] = useState("");
-  // const [error, setError] = useState("");
-
+  
   const handleChange = (e) => {
     setInput(e.target.value);
   }
   
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   setError("");
-  //   if (!input) return setError("Please enter a valid text");
-    
-  //   try {
-  //       user.setNickName = input;
-  //       handleClose();
-  //   } catch(err) {
-  //       setError(err.message);
-  //   }
-  // }
- 
   return (
     <div>
       

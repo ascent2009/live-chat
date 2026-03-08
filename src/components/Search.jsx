@@ -21,7 +21,6 @@ const Search =  observer(() =>{
         setError("");
         message.setInput = input;
         console.log("search: ", message.input); 
-        // console.log(toJS(message.messages)) 
     }
     
     return (
@@ -44,7 +43,6 @@ const Search =  observer(() =>{
                         padding: 0,
                     }}
                     placeholder="search in messages..."
-                    // onKeyDown={handleKeyDown}
                 />
                 {error && <FormHelperText sx={{
                             fontSize: 14,

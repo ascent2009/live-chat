@@ -11,16 +11,6 @@ const AvatarUpload = observer(() => {
   const fileInputRef = useRef(null);
   const user = useLocalObservable(() => myUser);
 
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     // Создание временного URL для отображения в UI
-  //     const imageUrl = URL.createObjectURL(file);
-  //     setAvatar(imageUrl);
-  //     // Здесь можно добавить логику отправки файла на сервер (напр. через FormData)
-  //     user.setAvatar = imageUrl;
-  //   }
-  // };
   const handleAvatarChange = (event) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -30,7 +20,6 @@ const AvatarUpload = observer(() => {
         setAvatar(reader.result);
         user.setAvatar = reader.result;
       };
-      // user.setAvatar = reader.result;
       reader.readAsDataURL(file);
       console.log('reader: ', user.user.avatar);
     }
@@ -38,22 +27,21 @@ const AvatarUpload = observer(() => {
 
   return (
     <>
-    <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", gap: 2, cursor: 'pointer'}}>
-      <Avatar 
-        src={avatar} 
-        alt="Avatar" 
-        onClick={() => fileInputRef.current.click()}
-      />
-      <FormLabel component="label">Choose an avatar (optional) </FormLabel>
-      <Input 
-            type="file" 
-            inputRef={fileInputRef} 
-            onChange={handleAvatarChange} 
-            accept="image/*" 
-            sx={{ display: 'none' }} 
-      />
-    </Box>
-    {/* <img src={user.user.avatar} alt="avatar" width="200px"></img> */}
+      <Box sx={{display: "flex", flexDirection: "column", alignItems: "center", gap: 2, cursor: 'pointer'}}>
+        <Avatar 
+          src={avatar} 
+          alt="Avatar" 
+          onClick={() => fileInputRef.current.click()}
+        />
+        <FormLabel component="label">Choose an avatar (optional) </FormLabel>
+        <Input 
+              type="file" 
+              inputRef={fileInputRef} 
+              onChange={handleAvatarChange} 
+              accept="image/*" 
+              sx={{ display: 'none' }} 
+        />
+      </Box>
     </>
   );
 });
